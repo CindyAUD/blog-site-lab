@@ -1,29 +1,55 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import Header from './components/Header';
+import { render, screen } from "@testing-library/react";
+import App from "./App";
+import Header from "./components/Header";
 
-// When run under Jest, `test` global exists. Otherwise, allow direct Node execution.
-if (typeof test === 'function') {
-  test('renders name passed through props', () => {
-    render(React.createElement(Header, { name: 'Cindy' }));
-    expect(screen.getByText("Cindy's Blog")).toBeInTheDocument();
+test("Header displays data passed through props", () => {
+  render(<Header name="Test User" />);
+
+  expect(
+    screen.getByText("Test User's Blog")
+  ).toBeInTheDocument();
+});
+
+describe("Personal Blog App", () => {
+  test("renders the blog title", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", {
+        name: /cindy audrey's blog/i,
+      })
+    ).toBeInTheDocument();
   });
-} else {
-  // Direct Node runner: render to string and exit with appropriate code for graders
-  (async () => {
-    try {
-      const { renderToString } = await import('react-dom/server');
-      const html = renderToString(React.createElement(Header, { name: 'Cindy' }));
-      // Account for HTML-escaped characters; check for presence of key words
-      if (html && html.includes('Cindy') && html.includes('Blog')) {
-        console.log('Test passed');
-        process.exit(0);
-      }
-      console.error('Test failed');
-      process.exit(1);
-    } catch (err) {
-      console.error('Runner error:', err && err.message ? err.message : err);
-      process.exit(2);
-    }
-  })();
-}
+
+  test("renders the about section", () => {
+    render(<App />);
+
+    expect(
+      screen.getByText(/software engineering student/i)
+    ).toBeInTheDocument();
+  });
+
+  test("renders article titles", () => {
+    render(<App />);
+
+    expect(
+      screen.getByText(/why i started learning react/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/understanding props/i)
+    ).toBeInTheDocument();
+  });
+
+  test("renders social links", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("link", { name: /github/i })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("link", { name: /linkedin/i })
+    ).toBeInTheDocument();
+  });
+});
