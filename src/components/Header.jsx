@@ -1,9 +1,11 @@
+import React from 'react';
+
 function Header({ name }) {
-  return (
-    <header className="hero">
-      <h1>{name}'s Blog</h1>
-      <p>Thoughts, projects, and my software engineering journey.</p>
-    </header>
+  return React.createElement(
+    'header',
+    { className: 'hero' },
+    React.createElement('h1', null, name + "'s Blog"),
+    React.createElement('p', null, 'Thoughts, projects, and my software engineering journey.')
   );
 }
 
